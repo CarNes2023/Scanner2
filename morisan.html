@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barcode Scanner</title>
+</head>
+<body>
+    <h1>Barcode Scanner</h1>
+    <video id="camera-preview"></video>
+    <p>Resultado del escaneo: <span id="barcode-result"></span></p>
+    
+    <script src="https://cdn.rawgit.com/serratus/quaggaJS/master/dist/quagga.min.js"></script>
+    <script>
+        const videoElement = document.getElementById('camera-preview');
+        const barcodeResult = document.getElementById('barcode-result');
+
+        Quagga.init({
+            inputStream: {
+                name: 'Live',
+                type: 'LiveStream',
+                target: videoElement
+            },
+            decoder: {
+                readers: ['code_128_reader']
+            }
+        }, function (err) {
+            if (err) {
+                console.error('Error al iniciar Quagga:', err);
+                return;
+            }
+            console.log('Quagga iniciado correctamente');
+            Quagga.start();
+        });
+
+        Quagga.onDetected(function(result) {
+            barcodeResult.textContent = result.codeResult.code;
+            // Aquí puedes realizar acciones adicionales con el código de barras escaneado
+        });
+    </script>
+</body>
+</html>
